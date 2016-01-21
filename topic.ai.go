@@ -33,12 +33,12 @@ type GoTagMap struct {
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
 
-	switch fmt.Sprint(r.URL) {
-	case "/weakand", "/weakand/":
+	switch r.URL.Path {
+	case "/weakand":
 		temp.Execute(w, GoTagMap{
 			ImportPath: "topic.ai/weakand",
 			RepoPath:   "https://github.com/wangkuiyi/weakand"})
-	case "/phoenix", "/phoenix/":
+	case "/phoenix":
 		temp.Execute(w, GoTagMap{
 			ImportPath: "topic.ai/phoenix",
 			RepoPath:   "https://github.com/wangkuiyi/phoenix"})
@@ -48,7 +48,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	addr := flag.String("addr", ":80", "Listening address")
+	addr := flag.String("addr", ":443", "Listening address")
 	flag.Parse()
 
 	if t, e := template.New("gotags").Parse(goTagsTemplate); e != nil {
@@ -58,5 +58,5 @@ func main() {
 	}
 
 	http.HandleFunc("/", viewHandler)
-	http.ListenAndServe(*addr, nil)
+	http.ListenAndServeTLS(*addr, "server.pem", "server.key", nil)
 }
