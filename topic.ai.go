@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 )
@@ -17,6 +18,9 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	addr := flag.String("addr", ":80", "Listening address")
+	flag.Parse()
+
 	http.HandleFunc("/", viewHandler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(*addr, nil)
 }
